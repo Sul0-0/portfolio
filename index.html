@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mateusz Sulowski — Portfolio GIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--surface:#1a1a1a;--surface2:#222;--border:#2e2e2e;
+  --text:#e8e8e8;--muted:#888;--faint:#3a3a3a;--accent:#4f98a3;
+  --radius:10px;--font-body:'Inter',sans-serif;--font-display:'Instrument Serif',Georgia,serif;
+}
+[data-theme="light"]{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f9f8f5;--border:#e0dedd;
+  --text:#1a1a1a;--muted:#666;--faint:#e8e8e8;--accent:#01696f;
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);font-size:16px;line-height:1.6;color:var(--text);background:var(--bg);min-height:100dvh}
+img{display:block;max-width:100%;height:auto}
+
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-name{font-family:var(--font-display);font-size:1.1rem}
+.nav-right{display:flex;gap:20px;align-items:center}
+.nav-right a{color:var(--muted);text-decoration:none;font-size:14px;transition:color .15s}
+.nav-right a:hover{color:var(--text)}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;color:var(--muted);font-size:13px;transition:all .15s}
+.theme-btn:hover{color:var(--text);border-color:var(--muted)}
+
+.hero{max-width:880px;margin:0 auto;padding:72px 24px 56px;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:start}
+.hero-photo{width:130px;height:130px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--border)}
+.hero-tag{font-size:12px;color:var(--accent);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.hero-name{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3rem);line-height:1.1;margin-bottom:14px}
+.hero-desc{color:var(--muted);max-width:50ch;font-size:15px;margin-bottom:20px}
+.contacts{display:flex;flex-wrap:wrap;gap:8px}
+.contacts a{color:var(--muted);text-decoration:none;font-size:13px;border:1px solid var(--border);border-radius:6px;padding:5px 12px;transition:all .15s}
+.contacts a:hover{color:var(--text);border-color:var(--muted)}
+
+.wrap{max-width:880px;margin:0 auto;padding:0 24px 56px}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.card-img{width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--faint)}
+.card-body{padding:13px 15px}
+.card-cat{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:3px}
+.card-title{font-size:14px;font-weight:600;line-height:1.35;margin-bottom:5px}
+.card-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.tags{margin-top:9px;display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:11px;background:var(--faint);border-radius:4px;padding:2px 7px;color:var(--muted)}
+
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.about-text p{color:var(--muted);font-size:14px;margin-bottom:10px}
+.about-text p:last-child{margin-bottom:0}
+.skills{display:flex;flex-wrap:wrap;gap:7px}
+.skills-label{font-size:12px;color:var(--muted);margin-bottom:10px}
+.skill{border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:13px;color:var(--muted);transition:all .15s}
+.skill:hover{border-color:var(--accent);color:var(--accent)}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:200;overflow-y:auto;padding:32px 16px}
+.overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:800px;width:100%;padding:28px 28px 32px;position:relative}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:4px;line-height:1;transition:color .15s}
+.modal-close:hover{color:var(--text)}
+.modal-cat{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:6px}
+.modal-title{font-family:var(--font-display);font-size:1.45rem;margin-bottom:16px;line-height:1.2;padding-right:32px}
+.modal-imgs{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.modal-imgs img{border-radius:7px;width:100%;border:1px solid var(--border)}
+.modal-desc{color:var(--muted);font-size:14px;line-height:1.75}
+.modal-method{margin-top:14px;padding:12px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.modal-method-label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px}
+.modal-method p{font-size:13px;color:var(--muted);line-height:1.65}
+.modal-meta{margin-top:12px;display:flex;flex-wrap:wrap;gap:14px}
+.meta{font-size:13px;color:var(--muted)}
+.meta strong{color:var(--text)}
+
+footer{border-top:1px solid var(--border);padding:28px 24px;text-align:center;color:var(--muted);font-size:13px}
+
+@media(max-width:600px){
+  .hero{grid-template-columns:1fr;gap:20px}
+  .hero-photo{width:90px;height:90px;order:-1}
+  .about-grid{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-name">Mateusz Sulowski</span>
+  <div class="nav-right">
+    <a href="#portfolio">Portfolio</a>
+    <a href="#o-mnie">O mnie</a>
+    <button class="theme-btn" id="tbtn" onclick="toggleTheme()">☀ Jasny</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="hero-tag">GIS · Kartografia · Planowanie przestrzenne</div>
+    <h1 class="hero-name">Mateusz<br>Sulowski</h1>
+    <p class="hero-desc">Student ostatniego semestru studiów magisterskich z Gospodarki Przestrzennej na Uniwersytecie Przyrodniczym w Lublinie. Specjalizuję się w analizach przestrzennych, kartografii i GIS.</p>
+    <div class="contacts">
+      <a href="mailto:mati.sul17@gmail.com">✉ mati.sul17@gmail.com</a>
+      <a href="tel:+48539993919">✆ 539 993 919</a>
+    </div>
+  </div>
+  <img src="./assets/zdjecie.jpg" alt="Mateusz Sulowski" class="hero-photo" loading="lazy" width="130" height="130">
+</div>
+
+<div class="wrap" id="portfolio">
+  <div class="section-label">Wybrane prace</div>
+  <div class="grid">
+
+    <div class="card" onclick="openModal('m1')">
+      <img src="./assets/gestosc.jpg" alt="Gęstość zabudowy w Lublinie" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Kartografia</div>
+        <div class="card-title">Gęstość zabudowy w Lublinie</div>
+        <div class="card-desc">Dwupanelowa mapa heksagonalna zabudowy jednorodzinnej i wielorodzinnej.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">BDOT10k</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m2')">
+      <img src="./assets/apteki.jpg" alt="Dostępność do aptek w Lublinie" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Analiza dostępności</div>
+        <div class="card-title">Tereny dostępności do aptek w Lublinie</div>
+        <div class="card-desc">Strefy 0–1500 m i 1500–3000 m wyznaczone sieciowo wzdłuż dróg.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">QNEAT3</span><span class="tag">BDOT10k</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m3')">
+      <img src="./assets/ndvi.jpg" alt="NDVI Park Ludowy" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Teledetekcja</div>
+        <div class="card-title">Wskaźnik NDVI — Park Ludowy w Lublinie</div>
+        <div class="card-desc">Analiza wegetacji z danych satelitarnych na poziomie działek ewidencyjnych.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">Sentinel-2</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m4')">
+      <img src="./assets/solarny-1.jpg" alt="Potencjał solarny" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Analizy przestrzenne</div>
+        <div class="card-title">Potencjał solarny połaci dachowych i diorama 3D</div>
+        <div class="card-desc">Analiza nasłonecznienia dachów i gruntu metodą r.sun + wizualizacja 3D.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">r.sun / GRASS</span><span class="tag">DSM/NMT</span><span class="tag">qgis2threejs</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m5')">
+      <img src="./assets/farma-thumb.jpg" alt="Farma wiatrowa Zaklików" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Planowanie przestrzenne</div>
+        <div class="card-title">Lokalizacja farmy wiatrowej — gmina Zaklików</div>
+        <div class="card-desc">Wyznaczenie stref wykluczeń i obszarów optymalnych dla farmy wiatrowej.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">BDOT10k</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m6')">
+      <img src="./assets/jpk.jpg" alt="JPK gminy Zaklików" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Fizjografia</div>
+        <div class="card-title">Jednostki Przyrodniczo-Krajobrazowe — gmina Zaklików</div>
+        <div class="card-desc">22 JPK z korytarzami ekologicznymi, funkcjami lasów i użytkowaniem terenu.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">ArcGIS</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m7')">
+      <img src="./assets/sosnami.jpg" alt="Mapa edukacyjna Pod sosnami" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Geodezja i kartografia</div>
+        <div class="card-title">Mapa trasy edukacyjnej „Pod sosnami"</div>
+        <div class="card-desc">Nowa, poprawna kartograficznie mapa — projekt z zajęć z geodezji i kartografii.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">Inkscape</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m8')">
+      <img src="./assets/dziki.jpg" alt="Liczebność dzikich zwierząt w Polsce" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Kartografia tematyczna</div>
+        <div class="card-title">Liczebność dzikich zwierząt w Polsce [GUS 2024]</div>
+        <div class="card-desc">Kartogram z diagramami kołowymi dla 16 województw — złączenie tabel GUS z warstwą wektorową.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">GUS BDL</span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal('m9')">
+      <img src="./assets/asf.jpg" alt="Strefy ASF" class="card-img" loading="lazy">
+      <div class="card-body">
+        <div class="card-cat">Zarządzanie kryzysowe</div>
+        <div class="card-title">Strefy zapowietrzone i zagrożone ASF</div>
+        <div class="card-desc">Strefy ochronne 3 km i zagrożenia 10 km wokół ognisk ASF z analizą % powierzchni gmin.</div>
+        <div class="tags"><span class="tag">QGIS</span><span class="tag">GIS SUPPORT</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="wrap" id="o-mnie">
+  <div class="section-label">O mnie</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>Student ostatniego semestru studiów magisterskich z Gospodarki Przestrzennej na Uniwersytecie Przyrodniczym w Lublinie (2021–2026).</p>
+      <p>Doświadczenie: praktyki studenckie w Urzędzie Miasta Stalowa Wola.</p>
+      <p><strong style="color:var(--text)">Języki:</strong> Polski (ojczysty), Angielski (B2+)<br>
+      <strong style="color:var(--text)">Certyfikaty:</strong> Prawo jazdy kat. B<br>
+      <strong style="color:var(--text)">Zainteresowania:</strong> Grafika koncepcyjna, analizy przestrzenne, nowe technologie</p>
+    </div>
+    <div>
+      <div class="skills-label">Umiejętności</div>
+      <div class="skills">
+        <span class="skill">QGIS</span>
+        <span class="skill">ArcGIS</span>
+        <span class="skill">AutoCAD</span>
+        <span class="skill">MS Office</span>
+        <span class="skill">Analiza przestrzenna</span>
+        <span class="skill">Kartografia</span>
+        <span class="skill">Teledetekcja</span>
+        <span class="skill">Planowanie przestrzenne</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 Mateusz Sulowski</footer>
+
+<!-- MODALS -->
+
+<div class="overlay" id="m1" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m1')">✕</button>
+    <div class="modal-cat">Kartografia</div>
+    <h2 class="modal-title">Gęstość zabudowy w Lublinie</h2>
+    <div class="modal-imgs"><img src="./assets/gestosc.jpg" alt="Gęstość zabudowy w Lublinie" loading="lazy"></div>
+    <p class="modal-desc">Dwupanelowa mapa porównawcza gęstości zabudowy jednorodzinnej i wielorodzinnej na terenie Lublina. Klasy gęstości od 1–2 do 54–80 budynków na komórkę siatki.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Dane z BDOT10k. Na podstawie punktów adresowych i obrysów budynków wygenerowano siatkę heksagonalną o boku 0,2 km. Do każdej komórki przypisano liczbę budynków danego typu. Klasyfikacja metodą naturalnych przerw (Jenks).</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, BDOT10k</span>
+      <span class="meta"><strong>Obszar:</strong> Lublin</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m2" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m2')">✕</button>
+    <div class="modal-cat">Analiza dostępności</div>
+    <h2 class="modal-title">Tereny dostępności do aptek w Lublinie</h2>
+    <div class="modal-imgs"><img src="./assets/apteki.jpg" alt="Dostępność do aptek w Lublinie" loading="lazy"></div>
+    <p class="modal-desc">Analiza obszarów spełniających i niespełniających standard dostępności społecznej 1500 m do apteki. Strefy: 0–1500 m (zielony) i 1500–3000 m (żółty).</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Dane drogowe z BDOT10k (SKDR + SKRP — drogi i ciągi piesze). Wykluczono drogi ekspresowe i drogi główne ruchu przyspieszonego. Lokalizacje aptek pobrano z danych PRG. Analizę sieciową wykonano wtyczką QNEAT3 (Iso-Area as Polygon from Layer) zgodnie z ustawą o planowaniu przestrzennym z 2003 r.</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, QNEAT3, BDOT10k, PRG</span>
+      <span class="meta"><strong>Obszar:</strong> Lublin</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m3" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m3')">✕</button>
+    <div class="modal-cat">Teledetekcja</div>
+    <h2 class="modal-title">Wskaźnik NDVI — Park Ludowy w Lublinie</h2>
+    <div class="modal-imgs"><img src="./assets/ndvi.jpg" alt="NDVI Park Ludowy" loading="lazy"></div>
+    <p class="modal-desc">Dwupanelowa mapa: lewa — wartości ciągłe NDVI (zakres -0,5 do 0,5), prawa — średnia wartość zagregowana do działek ewidencyjnych (5 klas: -0,21 do 0,31). Pozwala ocenić kondycję zieleni na poziomie pojedynczej działki.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Dane wielospektralne (kanały czerwony i bliskiej podczerwieni NIR) z satelity Sentinel-2. Wskaźnik NDVI obliczono jako (NIR-RED)/(NIR+RED). Następnie przy użyciu narzędzia Statystyki strefowe wyznaczono średnią wartość NDVI dla każdej działki ewidencyjnej w granicach parku. Granice działek z EGiB.</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, Sentinel-2, EGiB</span>
+      <span class="meta"><strong>Obszar:</strong> Park Ludowy, Lublin</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m4" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m4')">✕</button>
+    <div class="modal-cat">Analizy przestrzenne</div>
+    <h2 class="modal-title">Potencjał solarny połaci dachowych i diorama 3D</h2>
+    <div class="modal-imgs">
+      <img src="./assets/solarny-1.jpg" alt="Potencjał solarny — warianty A–C" loading="lazy">
+      <img src="./assets/solarny-2.jpg" alt="Wpływ zacienienia zieleni na potencjał solarny" loading="lazy">
+      <img src="./assets/solarny-3.jpg" alt="Potencjał solarny na gruncie" loading="lazy">
+      <img src="./assets/diorama.jpg" alt="Diorama 3D potencjału solarnego" loading="lazy">
+    </div>
+    <p class="modal-desc">Trzyczęściowa analiza: (1) potencjał solarny dachów 3 budynków wielorodzinnych z projektem 1645 modułów PV, (2) wpływ zieleni wysokiej na warunki lokalizacji PV na gruncie (różnica NMpT–NMT), (3) diorama 3D — wizualizacja wyników w przestrzeni trójwymiarowej z etykietami wybranych budynków.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Dane wejściowe: NMT i NMpT (Numeryczny Model Terenu i Pokrycia Terenu). Na ich podstawie obliczono ekspozycję (ASPECT) i nachylenie (SLOPE), następnie uruchomiono narzędzie r.sun (GRASS GIS) w celu obliczenia potencjału solarnego [Wh/m²]. Statystykami strefowymi wyznaczono średnią wartość dla każdej połaci dachowej. Wizualizacja 3D wykonana wtyczką qgis2threejs (plugin Qgis2threejs); budynki wyekstrudowano wg liczby pięter × 3 m.</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, r.sun/GRASS, NMT/NMpT, qgis2threejs</span>
+      <span class="meta"><strong>Obszar:</strong> Lublin</span>
+      <span class="meta"><strong>Rok:</strong> 2024/25</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m5" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m5')">✕</button>
+    <div class="modal-cat">Planowanie przestrzenne</div>
+    <h2 class="modal-title">Lokalizacja farmy wiatrowej — gmina Zaklików</h2>
+    <div class="modal-imgs">
+      <img src="./assets/farma-2.jpg" alt="Obszar analizy" loading="lazy">
+      <img src="./assets/farma-3.jpg" alt="Metodyka i strefy wykluczeń" loading="lazy">
+      <img src="./assets/farma-4.jpg" alt="Potencjalne lokalizacje" loading="lazy">
+    </div>
+    <p class="modal-desc">Wyznaczenie potencjalnych terenów pod farmę wiatrową. Wynik: obszar ok. 147 ha w północnej części gminy, przy istniejącej linii energetycznej.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Dane z BDOT10k. Zastosowano strefy wykluczeń buforowe: min. 700 m od zabudowy mieszkalnej, wykluczenie obszarów leśnych i prawnie chronionych (Natura 2000, parki krajobrazowe). Jako kryterium preferowane przyjęto odległość do 500 m od istniejących linii elektroenergetycznych. Warstwy wykluczeń połączono operacją różnicy geometrycznej, a pozostały obszar oceniono pod kątem ekspozycji i nachylenia terenu.</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, BDOT10k, NMT</span>
+      <span class="meta"><strong>Obszar:</strong> Gmina Zaklików</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m6" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m6')">✕</button>
+    <div class="modal-cat">Fizjografia</div>
+    <h2 class="modal-title">Jednostki Przyrodniczo-Krajobrazowe — gmina Zaklików</h2>
+    <div class="modal-imgs"><img src="./assets/jpk.jpg" alt="JPK gminy Zaklików" loading="lazy"></div>
+    <p class="modal-desc">Kompleksowa mapa środowiskowa z 22 Jednostkami Przyrodniczo-Krajobrazowymi: funkcje ochronne lasów, korytarze ekologiczne, wody powierzchniowe, zabudowa, uprawy trwałe, tereny zalesione.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Delimitacja JPK na podstawie analizy fizjograficznej: rzeźba terenu (NMT), pokrycie terenu (BDOT10k, ortofotomapa), sieć hydrograficzna i granice obszarów chronionych. Jednostki wyznaczono metodą fotointerpretacji i digitalizacji.</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, BDOT10k, NMT</span>
+      <span class="meta"><strong>Obszar:</strong> Gmina Zaklików</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m7" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m7')">✕</button>
+    <div class="modal-cat">Geodezja i kartografia</div>
+    <h2 class="modal-title">Mapa trasy edukacyjnej „Pod sosnami"</h2>
+    <div class="modal-imgs"><img src="./assets/sosnami.jpg" alt="Mapa Pod sosnami" loading="lazy"></div>
+    <p class="modal-desc">Nowa, poprawna kartograficznie mapa zastępująca istniejącą, błędnie wykonaną mapę trasy edukacyjnej.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Zadanie polegało na zidentyfikowaniu i poprawieniu błędów kartograficznych istniejącej mapy (błędna generalizacja, niestandardowe symbole, brak elementów obowiązkowych). Nową wersję wykonano w QGIS z użyciem aktualnych danych topograficznych, następnie opracowano layout graficzny. Projekt z zajęć z geodezji i kartografii.</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m8" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m8')">✕</button>
+    <div class="modal-cat">Kartografia tematyczna</div>
+    <h2 class="modal-title">Udział liczebności wybranych dzikich zwierząt w Polsce na tle liczebności dzika [GUS 2024]</h2>
+    <div class="modal-imgs"><img src="./assets/dziki.jpg" alt="Liczebność dzikich zwierząt w Polsce" loading="lazy"></div>
+    <p class="modal-desc">Mapa kartogramowa dla 16 województw z nakładkowymi diagramami kołowymi struktury gatunkowej.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Dane pobrano z portalu GUS — Bank Danych Lokalnych (Leśnictwo i łowiectwo → zwierzęta łowne, rok 2024). Tabelę sformatowano do kodów 2-cyfrowych województw i złączono z warstwą wektorową granic województw (GIS SUPPORT) narzędziem Złączenia w QGIS. Kartogram skonfigurowano wg liczebności dzika (5 klas), diagramy kołowe — właściwości warstwy → Kartodiagram → wykres kołowy z atrybutami poszczególnych gatunków.</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, GUS BDL 2024</span>
+      <span class="meta"><strong>Obszar:</strong> Polska</span>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="m9" onclick="bgClose(event,this)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('m9')">✕</button>
+    <div class="modal-cat">Zarządzanie kryzysowe</div>
+    <h2 class="modal-title">Strefy zapowietrzone i zagrożone ASF w Polsce</h2>
+    <div class="modal-imgs"><img src="./assets/asf.jpg" alt="Strefy ASF" loading="lazy"></div>
+    <p class="modal-desc">Mapa stref ochronnych wokół ognisk Afrykańskiego Pomoru Świń: strefa zapowietrzona 3 km i strefa zagrożenia 10 km. Analiza objęła obliczenie % powierzchni każdej gminy znajdującej się w poszczególnych strefach — gmina Głusk: 100% w strefie zagrożenia i 20,4% w zapowietrzonej.</p>
+    <div class="modal-method">
+      <div class="modal-method-label">Metodyka</div>
+      <p>Lokalizacje ognisk ASF pobrano z dostępnych danych weterynaryjnych. Wokół każdego ogniska wygenerowano bufory 3 km (strefa zapowietrzona) i 10 km (strefa zagrożenia). Warstwy buforów nałożono na granice gmin (PRG) i obliczono powierzchnię przecięcia. Wyniki zestawiono w tabeli z udziałem procentowym stref w powierzchni gmin. Projekt z przedmiotu Kształtowanie terenów dla potrzeb zarządzania kryzysowego (2026).</p>
+    </div>
+    <div class="modal-meta">
+      <span class="meta"><strong>Narzędzia:</strong> QGIS, PRG</span>
+      <span class="meta"><strong>Rok:</strong> 26.02.2026</span>
+      <span class="meta"><strong>Przedmiot:</strong> Kształtowanie terenów dla potrzeb zarządzania kryzysowego</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){
+  const h=document.documentElement,b=document.getElementById('tbtn');
+  if(h.dataset.theme==='dark'){h.dataset.theme='light';b.textContent='🌙 Ciemny';}
+  else{h.dataset.theme='dark';b.textContent='☀ Jasny';}
+}
+function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+function bgClose(e,el){if(e.target===el){el.classList.remove('open');document.body.style.overflow='';}}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')document.querySelectorAll('.overlay.open').forEach(o=>{o.classList.remove('open');document.body.style.overflow='';});
+});
+</script>
+</body>
+</html>
